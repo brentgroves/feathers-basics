@@ -33,21 +33,6 @@ class MessageService {
   }
 }
 
-class ReportService {
-  constructor() {
-    this.reports = [];
-  }
-
-  async find () {
-    // Just return all our messages
-    return this.reports;
-  }
-
-  async create (data) {
-
-    return 'test.html';
-  }
-}
 // async function render () {
 //   const res = await client.render({
 //     template: {
@@ -75,8 +60,6 @@ app.use(express.static(__dirname));
 app.configure(express.rest());
 // Configure Socket.io real-time APIs
 app.configure(socketio());
-// Register an in-memory messages service
-app.use('/reports', new ReportService());
 // Register an in-memory messages service
 app.use('/messages', new MessageService());
 // Register a nicer error handler than the default Express one
@@ -122,7 +105,7 @@ client.on('message', function (topic, message) {
   // message is Buffer
   console.log(message.toString())
   // client.end()
-  app.service('reports').create({
+  app.service('messages').create({
     text: message.toString()
   });
   

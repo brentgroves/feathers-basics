@@ -11,14 +11,8 @@
     <h1>Welcome to Feathers</h1>
     <form class="form" onsubmit="sendMessage(event.preventDefault())">
       <input type="text" id="message-text" placeholder="Enter message here">
-      <button type="submit" class="button button-primary">Run report</button>
+      <button type="submit" class="button button-primary">Send message</button>
     </form>
-    <div id="reportDiv">    
-      <a id="reportLink" target="_blank" href="http://localhost:3030/test.html">link text</a>
-    </div>  
-    <div id="statusDiv">  
-      <h2 id="statusMsg">Here are the current messages:</h2>  
-    </div>  
 
     <h2>Here are the current messages:</h2>
   </main>
@@ -35,19 +29,8 @@
     // Register socket.io to talk to our server
     app.configure(feathers.socketio(socket));
 
-    var reportDiv = document.getElementById('reportDiv');
-    reportDiv.style.display = "none";
-
-    var statusDiv = document.getElementById('statusDiv');
-    statusDiv.style.display = "none";
-
-    
     // Form submission handler that sends a new message
     async function sendMessage () {
-      var statusMsg = document.getElementById('statusMsg');
-      statusMsg.innerHTML += 'report in progress...'
-      var statusDiv = document.getElementById('statusDiv');
-      statusDiv.style.display = "block";
       const messageInput = document.getElementById('message-text');
       // Create a new message with the input field value
       await app.service('messages').create({
@@ -61,21 +44,7 @@
     function addMessage (message) {
       document.getElementById('main').innerHTML += `<p>${message.text}</p>`;
     }
-
-        // Renders a single message on the page
-    function openReport (report) {
-      var statusMsg = document.getElementById('statusMsg');
-      statusMsg.innerHTML = 'report is finihed...'
-      var statusDiv = document.getElementById('statusDiv');
-      statusDiv.style.display = "block";
-
-      var reportLink = document.getElementById('reportLink');
-      reportLink.setAttribute('href', 'http://localhost:3030/test.html');
-      var reportDiv = document.getElementById('reportDiv');
-      reportDiv.style.display = "block";
-      document.getElementById('main').innerHTML += `<p>test</p>`;
-    }
-
+    
     const main = async () => {
       // Find all existing messages
       const messages = await app.service('messages').find();
@@ -85,10 +54,6 @@
 
       // Add any newly created message to the list in real-time
       app.service('messages').on('created', addMessage);
-
-      // Add any newly created message to the list in real-time
-      app.service('reports').on('created', openReport);
-
     };
 
     main();
