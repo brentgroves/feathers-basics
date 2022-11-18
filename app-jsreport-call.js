@@ -1,8 +1,7 @@
 const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const socketio = require('@feathersjs/socketio');
-var mqtt=require('mqtt');
-// const client = require('@jsreport/nodejs-client')('http://localhost:5488');
+const client = require('@jsreport/nodejs-client')('http://localhost:5488');
 
 // A messages service that allows to create new
 // and return all existing messages
@@ -23,8 +22,8 @@ class MessageService {
       id: this.messages.length,
       text: data.text
     }
-    // console.log('call render');
-    // render().catch(console.error)
+    console.log('call render');
+    render().catch(console.error)
     // Add new message to the list
     this.messages.push(message);
     // const bodyBuffer = await res.body()
@@ -33,20 +32,20 @@ class MessageService {
   }
 }
 
-// async function render () {
-//   const res = await client.render({
-//     template: {
-//       content: 'hello {{someText}}',
-//       recipe: 'html',
-//       engine: 'handlebars'
-//     },
-//     data: { someText: 'world!!' }
-//   })
+async function render () {
+  const res = await client.render({
+    template: {
+      content: 'hello {{someText}}',
+      recipe: 'html',
+      engine: 'handlebars'
+    },
+    data: { someText: 'world!!' }
+  })
 
-//   console.log(res.headers)
-//   const bodyBuffer = await res.body()
-//   console.log(bodyBuffer.toString())
-// }
+  console.log(res.headers)
+  const bodyBuffer = await res.body()
+  console.log(bodyBuffer.toString())
+}
 // Creates an ExpressJS compatible Feathers application
 const app = express(feathers());
 
@@ -82,31 +81,3 @@ app.listen(3030).on('listening', () =>
 app.service('messages').create({
   text: 'Hello world from the server'
 });
-
-// https://www.macrometa.com/iot-infrastructure/node-js-mqtt
-const options = {
-  port: 30231,
-  host: 'reports31',
-  clientId: 'myclient',
-};
-
-const client = mqtt.connect(options)
-
-client.on('connect', function () {
-  console.log('connected to reports31')
-  client.subscribe('mytopic', function (err) {
-    if (!err) {
-      client.publish('mytopic', 'Hello mqtt')
-    }
-  })  
-});
-
-client.on('message', function (topic, message) {
-  // message is Buffer
-  console.log(message.toString())
-  // client.end()
-  app.service('messages').create({
-    text: message.toString()
-  });
-  
-})

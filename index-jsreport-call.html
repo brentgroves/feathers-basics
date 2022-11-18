@@ -19,7 +19,22 @@
 
   <script src="//unpkg.com/@feathersjs/client@^4.3.0/dist/feathers.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+  <script src="https://unpkg.com/@jsreport/browser-client/dist/jsreport.umd.js"></script>
   <script type="text/javascript">
+    jsreport.serverUrl = 'http://localhost:5488'
+    async function render () {
+      const report = await jsreport.render({
+        template: {
+          content: 'hello {{someText}}',
+          recipe: 'html',
+          engine: 'handlebars'
+        },
+        data: { someText: 'world!!' }
+      })
+      console.log(res.headers)
+      const bodyBuffer = await res.body()
+      console.log(bodyBuffer.toString())
+    }
    
     // Set up socket.io
     const socket = io('http://localhost:3030');
@@ -32,6 +47,38 @@
     // Form submission handler that sends a new message
     async function sendMessage () {
       const messageInput = document.getElementById('message-text');
+
+      const report = await jsreport.render({
+        template: {
+          name: 'invoice'    
+        },
+        data: {
+            "to": "Moto",
+            "from": "CK",
+            "price": 500
+        }
+      })
+      report.download('myreport.pdf')
+
+      // const report = await jsreport.render({
+      //   template: {
+      //     content: 'hello {{someText}}',
+      //     recipe: 'html',
+      //     engine: 'handlebars'
+      //   },
+      //   data: { someText: 'world!!' }
+      // })
+      // report.openInWindow({ title: 'myreport' })
+
+      // download the output to the file
+      // report.download('myreport.pdf')
+      // open output in the new window
+      // report.openInWindow({ title: 'myreport' })
+      // console.log(res.headers)
+      // const bodyBuffer = await res.body()
+      // console.log(bodyBuffer.toString())
+      // const v1 = report.toString()
+      // console.log(v1)
       // Create a new message with the input field value
       await app.service('messages').create({
         text: messageInput.value
