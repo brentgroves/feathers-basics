@@ -40,12 +40,18 @@ class ReportService {
 
   async find () {
     // Just return all our messages
-    return this.reports;
+    // return this.reports;
+    console.log('In find()')
+    return '22';
   }
 
   async create (data) {
-
-    return 'test.html';
+    // const message = {
+    //   id: this.messages.length,
+    //   text: data.text
+    // }
+    console.log('In create()')
+    return '22';
   }
 }
 // async function render () {
@@ -112,9 +118,9 @@ const client = mqtt.connect(options)
 client.on('connect', function () {
   console.log('connected to reports31')
   client.subscribe('mytopic', function (err) {
-    if (!err) {
-      client.publish('mytopic', 'Hello mqtt')
-    }
+    // if (!err) {
+    //   client.publish('mytopic', 'Hello mqtt')
+    // }
   })  
 });
 

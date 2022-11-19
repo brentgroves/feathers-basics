@@ -32,6 +32,8 @@
     // Initialize a Feathers app
     const app = feathers();
     
+    var jobId = 0;
+
     // Register socket.io to talk to our server
     app.configure(feathers.socketio(socket));
 
@@ -45,16 +47,20 @@
     // Form submission handler that sends a new message
     async function sendMessage () {
       var statusMsg = document.getElementById('statusMsg');
-      statusMsg.innerHTML += 'report in progress...'
+      statusMsg.innerHTML = 'report in progress...'
       var statusDiv = document.getElementById('statusDiv');
       statusDiv.style.display = "block";
+      // var statusDiv = document.getElementById('statusDiv');
+      // statusDiv.style.display = "block";
       const messageInput = document.getElementById('message-text');
       // Create a new message with the input field value
-      await app.service('messages').create({
+      jobId = await app.service('reports').find({
         text: messageInput.value
       });
-
       messageInput.value = '';
+      statusMsg = document.getElementById('statusMsg');
+      statusMsg.innerHTML += 'job id is ' + jobId;
+
     }
 
     // Renders a single message on the page
@@ -63,9 +69,9 @@
     }
 
         // Renders a single message on the page
-    function openReport (report) {
+    function openReport (jobId) {
       var statusMsg = document.getElementById('statusMsg');
-      statusMsg.innerHTML = 'report is finihed...'
+      statusMsg.innerHTML = 'report is finished... jobId is' + jobId
       var statusDiv = document.getElementById('statusDiv');
       statusDiv.style.display = "block";
 
